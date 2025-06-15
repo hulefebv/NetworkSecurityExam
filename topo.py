@@ -16,14 +16,12 @@ class QUICPoCTopo(Topo):
     s1 = self.addSwitch('s1')
 
     client = self.addHost('client', ip='10.0.0.2/24', defaultRoute='via 10.0.0.1')
-    serverQUIC = self.addHost('serverQUIC', ip='10.0.1.2/24', defaultRoute='via 10.0.1.1')
-    serverTCP = self.addHost('serverTCP', ip='10.0.1.3/24', defaultRoute='via 10.0.1.1')
+    server = self.addHost('server', ip='10.0.1.2/24', defaultRoute='via 10.0.1.1')
 
     self.addLink(client, fw)
     
     self.addLink(fw, s1)
-    self.addLink(serverQUIC, s1)
-    self.addLink(serverTCP, s1)
+    self.addLink(server, s1)
 
 def configure_router(net):
   fw = net.get('fw')
@@ -40,7 +38,7 @@ def enable_ip_forwarding(net):
 
 
 def start_serverQUIC_xterm(net):
-  serverQUIC = net.get('serverQUIC')
+  serverQUIC = net.get('server')
   cert_path = "certs/cert.pem"
   key_path = "certs/key.pem"
 
@@ -56,7 +54,7 @@ def start_serverQUIC_xterm(net):
 
 
 def start_tls_server_xterm(net):
-  serverTCP = net.get('serverTCP')
+  serverTCP = net.get('server')
   cert_path = "certs/cert.pem"
   key_path = "certs/key.pem"
   cmd = "python3 tcp_server/https_server.py"

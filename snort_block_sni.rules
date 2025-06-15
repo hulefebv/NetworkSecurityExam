@@ -1,4 +1,4 @@
-alert tcp any any -> any 443 (msg:"[TCP/TLS] FOUND TLS SNI for bad.com"; content:"bad.com"; sid:1;)
+alert tcp any any -> any 4443 (msg:"[TCP/TLS] FOUND TLS SNI for bad.com"; content:"bad.com"; sid:1;)
 
 alert udp any any -> any 443 (msg:"[QUIC] FOUND TLS SNI for bad.com"; content:"bad.com"; sid:2;)
 
