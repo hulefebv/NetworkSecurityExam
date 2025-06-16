@@ -53,14 +53,14 @@ server ping client
 ```
 
 You will need to open two terminals
-- First with in `xterm client` launch `python3 scapy_sniffer.py` look at all the traffic going through client-eth0.
-- Second in `xterm server` launch `python3 hole_punching.py`. This will listen for incoming UDP packet and send back unsolicited pakcet to the sender.
-- Quickly after launching hole-punching.py send the QUIC request.
+- First in `xterm client` launch `python3 scapy_sniffer.py` to look at all the traffic going through client-eth0.
+- Second in `xterm server` launch `python3 hole_punching.py`. This will listen for incoming UDP packet and send back ten unsolicited packets to the sender.
+- Quickly after launching hole-punching.py send the QUIC request with
 ```bash
 client python3 http3_client.py https://bad.com --ca-certs certs/cert.pem # --output-dir output_dirs
 ```
 Here are the following steps you can observe:
-- Once the `hole_punching.py` detects the incoming traffic it will save the IP's and ports and wait for three second before sending usolicited traffic.
+- Once the `hole_punching.py` detects the incoming traffic, after waiting for three seconds, it will use the IP's and port numbers to send usolicited traffic.
 - After which you will be able to see on the `scapy_sniffer.py` terminal that the unsolicited packet have truly made it trough the firewall.
     
 
