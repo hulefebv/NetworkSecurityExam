@@ -65,6 +65,16 @@ def start_tcpdump(net):
   fw = net.get('fw')
   cmd = "tcpdump -i fw-eth0 -w ./tcpdump.pcap"
   makeTerm(fw, cmd=cmd, title="tcpdump")
+  
+def enable_statefull_filter(net):
+    fw = net.get('fw')
+    fw.cmd('iptables -F')
+    fw.cmd('iptables -A FORWARD -m state --state ESTABLISHED,RELATED -j ACCEPT')
+    fw.cmd('iptables -A FORWARD -i fw-eth0 -o fw-eth1 -m state --state NEW -j ACCEPT')
+    fw.cmd('iptables -A FORWARD -i fw-eth1 -o fw-eth0 -m state --state NEW -j DROP')
+    fw.cmd('iptables -A INPUT -i lo -j ACCEPT')
+    fw.cmd('iptables -A OUTPUT -o lo -j ACCEPT')
+    fw.cmd('iptables -P FORWARD DROP')
 
 def run():
   setLogLevel('info')
@@ -77,6 +87,8 @@ def run():
   start_serverQUIC_xterm(net)
   start_tls_server_xterm(net)
   start_tcpdump(net)
+  
+  enable_statefull_filter(net) 
 
   info("[INFO] Ready to test QUIC vs TLS filtering!\n")
   CLI(net)
